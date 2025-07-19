@@ -1,0 +1,23 @@
+.git/
+.vscode/
+.vs/
+bin/
+obj/
+*.log
+*.tmp
+.vscode/
+.idea/
+*.user
+*.suo
+.vs/
+
+# Ignore local configuration files
+appsettings.*.json
+secrets.json
+
+# Ignore temporary files
+*.log
+*.tmp
+*.swp
+*.DS_Store
+Thumbs.db

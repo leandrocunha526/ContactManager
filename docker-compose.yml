@@ -1,0 +1,60 @@
+services:
+  db:
+    image: mariadb:10
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MARIADB_USER: contactmanageruser
+      MARIADB_PASSWORD: contactmanager
+      MARIADB_ROOT_PASSWORD: contactmanager
+      MARIADB_DATABASE: contactmanagerdb
+    volumes:
+      - data:/var/lib/mysql
+    networks:
+      - dbnet
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "127.0.0.1",
+          "-uroot",
+          "-pcontactmanager",
+          "--silent",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Maps port 8080 on the host to port 8080 in the container
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    networks:
+      - dbnet
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "80:8080" # Maps port 80 on the host to port 8080 in the Adminer container
+    depends_on:
+      - db
+    networks:
+      - dbnet
+volumes:
+  data:
+
+networks:
+  dbnet:
+    driver: bridge

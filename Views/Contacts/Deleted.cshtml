@@ -1,0 +1,42 @@
+@model IEnumerable<ContactManager.Models.Contact>
+
+@{
+    ViewData["Title"] = "Deleted Contacts";
+}
+
+<h2>Deleted Contacts</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Deleted at</th>
+            <th>Removed?</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Phone</td>
+                <td>@item.Email</td>
+                <td>@item.DeletedAt?.ToString("MM/dd/yyyy HH:mm")</td>
+                <td>
+                    @(item.IsDeleted ? "Yes" : "No")
+                </td>
+                <td>
+                    <form asp-action="Restore" method="post">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit" class="btn btn-sm btn-success">Restore contact</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">Back to contacts table</a>
